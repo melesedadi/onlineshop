@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Account List</title>
+    <div th:replace="base::head"></div>
+</head>
+<body>
+<div th:replace="base::jumbotron1"></div>
+<nav id="nav_bar">
+    <ul id="navmenu">
+        <li><a href="/home">Home</a></li>
+        <li ><a class="current" href="/withdrawform">Withdraw Result</a></li>
+        <li><a  href="/depositform">Deposit Result</a></li>
+        <li><a class="current" href="/addaccount">Add Accounts</a></li>
+    </ul>
+</nav><br/>
+
+<h2>This is information of your ATM account.</h2>
+
+    <table style="margin-top: 20px;" class="content-table">
+        <thead>
+        <tr>
+            <th>Account Number</th>
+            <th>Amount</th>
+            <th>Withdraw</th>
+            <th>Balance</th>
+        </tr>
+
+        <thead>
+
+        <tbody>
+        <tr th:each="account : ${accounts}">
+            <td th:text="${account.accountnum}"></td>
+            <td th:text="${account.amount}"></td>
+            <td th:text="${account.withdraw}"></td>
+            <td th:text="${account.withdraw}+${account.balance}"></td>
+
+
+
+            </td>
+        </tr>
+        <tbody>
+<h3>How much do you want to withdraw??</h3>
+    <form th:action="@{/processaccount}" th:object="${account}" method="post">
+
+        <input type="hidden" th:field="*{id}" >
+
+        Withdraw amount:&nbsp;<input type="text" th:field="*{change}" >
+
+        <span th:if="${#fields.hasErrors('change')}" th:errors="*{change}">&nbsp;&nbsp;</span><br/>
+
+
+        <br/>
+        <input type="submit" value="Submit" class="btn btn-primary btn-lg" role="button">
+<br/>
+
+<div th:replace="base::footer"></div>
+
+</body></body>

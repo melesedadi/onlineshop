@@ -5,17 +5,27 @@ import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @Controller
 public class HomeController {
 
-	@Autowired
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    AccountRepository accountRepository;
+
+
+    @Autowired
 	private LoginService service;
+
+    @RequestMapping("/home")
+    public String home() {
+        return "home";
+    }
 	
 	@RequestMapping("/")
 	public String index(Model model) {
@@ -68,5 +78,27 @@ public class HomeController {
        return "loginform";
     }
 
+
+    @GetMapping("/addaccount")
+
+    public String accountForm(Model model){
+
+        model.addAttribute("users", userRepository.findAll());
+
+        model.addAttribute("account", new Account());
+
+        return "accountform";
+    }
+
+    @RequestMapping("/withdrawform")
+    public String withdrawForm(Model model, Account account){
+        model.addAttribute("accounts", accountRepository.findAll());
+
+        if(account.getChange()>=0){return "depositform";}
+
+        return "withdrawform";
+    }
+
+    @PostMapping("/processaccount")
 
 }
