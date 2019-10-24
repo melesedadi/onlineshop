@@ -18,9 +18,8 @@ public class HomeController {
     @Autowired
     AccountRepository accountRepository;
 
-
     @Autowired
-	private LoginService service;
+	private LoginService loginService;
 
     @RequestMapping("/home")
     public String home() {
@@ -41,7 +40,7 @@ public class HomeController {
     public String doLogin(@ModelAttribute(name = "loginForm") User user, Model model)
 	{
 
-        if(service.findUser(user.getUsername(),user.getPassword())!= null)
+        if(loginService.findUser(user.getUsername(),user.getPassword())!= null)
         {
             return "home";
         }
@@ -74,31 +73,76 @@ public class HomeController {
 
        User user = new User(firstname,lastname,username,password);
 
-       service.registerUser(user);
+       loginService.registerUser(user);
        return "loginform";
     }
 
-
-    @GetMapping("/addaccount")
-
-    public String accountForm(Model model){
-
+    @RequestMapping("/userslist")
+    public String departmentList(Model model) {
         model.addAttribute("users", userRepository.findAll());
+        return "userslist";
 
-        model.addAttribute("account", new Account());
-
-        return "accountform";
     }
 
-    @RequestMapping("/withdrawform")
-    public String withdrawForm(Model model, Account account){
+    @PostMapping("/processuser")
+    public String processForm1(@Valid User user,
+                               BindingResult result) {
+        if (result.hasErrors()) {
+            return "registerform";
+        }
+        userRepository.save(user);
+        return "redirect:/userslist";
+    }
+    @RequestMapping("/balancelist")
+    public String employeeList(Model model){
         model.addAttribute("accounts", accountRepository.findAll());
-
-        if(account.getChange()>=0){return "depositform";}
-
-        return "withdrawform";
+        return "balancelist";
     }
 
-    @PostMapping("/processaccount")
-
-}
+    @GetMapping("/addbalance")
+    public String employeeForm(Model model){
+        model.addAttribute("account", new Account());
+        model.addAttribute("user", userRepository.findAll());
+        return "balanceform";
+    }
+    @PostMapping("/processbalance")
+    public String processForm2(@Valid Account account,
+                               BindingResult result){
+        if (result.hasErrors()){
+            return "balanceform";
+        }
+        accountRepository.save(account);
+        return "redirect:/balancelist";
+    }
+    @RequestMapping("/detailbalance/{id}")
+    public String showPerson(@PathVariable("id") int id, Model model)
+    {model.addAttribute("account", accountRepository.findAll());
+        return "showbalance";
+    }
+    @RequestMapping("/updatebalance/{id}")
+    public String updatePerson(@PathVariable("id") int id,Model model){
+        model.addAttribute("account", accountRepository.findById(id).get());
+        return "balanceform";
+    }
+    @RequestMapping("/deletebalance/{id}")
+    public String delPerson(@PathVariable("id") int id){
+        accountRepository.deleteById(id);
+        return "redirect:/";
+    }
+    @RequestMapping("/detailuser/{id}")
+    public String showPet(@PathVariable("id") int id, Model model)
+    {model.addAttribute("user", userRepository.findById(id).get());
+        return "showusers";
+    }
+    @RequestMapping("/updateuser/{id}")
+    public String updatePet(@PathVariable("id") int id,Model model){
+        model.addAttribute("account", accountRepository.findById(id).get());
+        model.addAttribute("users", userRepository.findAll());
+        return "registerform";
+    }
+    @RequestMapping("/deleteuser/{id}")
+    public String delPet(@PathVariable("id") int id){
+        userRepository.deleteById(id);
+        return "redirect:/";
+    }
+  }

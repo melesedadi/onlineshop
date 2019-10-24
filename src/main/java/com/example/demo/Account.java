@@ -3,6 +3,7 @@ package com.example.demo;
 import javax.jws.soap.SOAPBinding;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
@@ -10,28 +11,16 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @NotBlank
-    private int accountnum;
-    @NotBlank
-    private float change;
-    @NotBlank
-    private float amount;
-    @NotBlank
+    @NotNull
+    private  String firstname;
+    @NotNull
+    private  String lasttname;
+    @NotNull
     private float balance;
-    @NotBlank
-    private String username;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
-    /*@OneToMany(mappedBy = "account", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    public Set<Transaction> transactions;*/
-
-
-
-
 
     public int getId() {
         return id;
@@ -41,28 +30,20 @@ public class Account {
         this.id = id;
     }
 
-    public int getAccountnum() {
-        return accountnum;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setAccountnum(int accountnum) {
-        this.accountnum = accountnum;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public float getChange() {
-        return change;
+    public String getLasttname() {
+        return lasttname;
     }
 
-    public void setChange(float change) {
-        this.change = change;
-    }
-
-    public float getAmount() {
-        return amount;
-    }
-
-    public void setAmount(float amount) {
-        this.amount = amount;
+    public void setLasttname(String lasttname) {
+        this.lasttname = lasttname;
     }
 
     public float getBalance() {
@@ -80,6 +61,8 @@ public class Account {
     public void setUser(User user) {
         this.user = user;
     }
+/*@OneToMany(mappedBy = "account", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    public Set<Transaction> transactions;*/
 
 
 }

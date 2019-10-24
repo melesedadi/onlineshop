@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Account List</title>
+    <div th:replace="base::head"></div>
+</head>
+<body>
+
+<h1>Account Balance Form</h1>
+
+<form action="#" th:action="@{/processbalance}" th:object="${account}" method="post">
+    <input type="hidden" th:field="*{id}" />
+    First name :<Select  name="user" th:field="*{user}">
+    <option th:each="user2 :${user}"  th:value="${user2.id}" th:text="${user2.firstname}">
+    </option>
+</Select>
+
+    First name :<Select  name="user" th:field="*{user}">
+    <option th:each="user2 :${user}"  th:value="${user2.id}" th:text="${user2.lastname}">
+    </option>
+</Select>
+    Account Balanace :<input type="number" th:field="*{balance}"/>
+    <span th:if="${#fields.hasErrors('balance')}"
+          th:errors="*{balance}"></span><br/>
+    <input type="submit" value="Submit" />
+</form>
+
+</body>
+</html>
